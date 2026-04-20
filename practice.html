@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Hub | AI Mentor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="practice.css">
+  <script src="data.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+    <div class="nav-links">
+      <a href="javascript:handleHomeNav()">Home</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="practice.html" class="active">Practice</a>
+      <a href="profile.html">Profile</a>
+      <a href="interview.html">Interview</a>
+    </div>
+    <div class="nav-right">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      <div id="profileTrigger" style="position: relative; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+        <span id="userNameNav" style="font-weight: 600; font-size: 0.95rem;">User</span>
+        <div class="profile-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+          <span id="userInitial">V</span>
+        </div>
+        <div id="profileDropdown" class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px; width: 160px; z-index: 1001;">
+          <button id="logoutBtn" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-family: inherit;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="practice-container">
+    
+    <!-- FILTERS -->
+    <section class="practice-controls" style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+      <div class="search-box" style="flex: 1; min-width: 250px; position: relative;">
+        <i class="fas fa-search" style="position: absolute; left: 15px; top: 14px; color: var(--muted);"></i>
+        <input type="text" id="questionSearch" placeholder="Search by name or tags..." 
+          style="width: 100%; padding: 12px 15px 12px 45px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; color: var(--text);">
+      </div>
+      <select id="difficultyFilter" style="padding: 12px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; color: var(--text);">
+        <option value="all">All Difficulties</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+      <div class="topic-indicator" id="currentTopicLabel" style="padding: 10px 20px; background: var(--glass); border-radius: 12px; font-weight: 600; color: var(--primary);">
+        All Questions
+      </div>
+    </section>
+
+    <!-- PROBLEM GRID -->
+    <section class="problem-grid" id="problemGrid">
+      <!-- Dynamic Content -->
+    </section>
+
+  </main>
+
+  <!-- DETAILS MODAL -->
+  <div id="detailsModal" class="modal" onclick="closeDetailsModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
+      <div class="modal-header">
+        <h2 id="modalTitle">Problem Title</h2>
+        <span id="modalDifficulty" class="difficulty">Easy</span>
+      </div>
+      <div class="modal-body">
+        <h4><i class="fas fa-book"></i> Prerequisites</h4>
+        <p id="modalPrereq">Loading...</p>
+        
+        <h4><i class="fas fa-lightbulb"></i> Recommended Approach</h4>
+        <p id="modalApproach">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // AUTH & PERSONALIZATION
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) {
+      window.location.href = 'auth.html';
+    } else {
+      document.getElementById('userNameNav').innerText = user.name;
+      document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
+    }
+
+    // NAVBAR & LOGOUT
+    const profileTrigger = document.getElementById('profileTrigger');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    profileTrigger.onclick = (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    };
+    window.onclick = () => profileDropdown.classList.add('hidden');
+    logoutBtn.onclick = () => {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    };
+
+    // DYNAMIC LOADING & FILTERING
+    const urlParams = new URLSearchParams(window.location.search);
+    const trackId = urlParams.get('track') || localStorage.getItem('selectedTrack') || 'dsa';
+    const topicId = urlParams.get('topic') || localStorage.getItem('selectedTopic');
+
+    let allQuestions = [];
+    
+    function loadInitialData() {
+      if (topicId) {
+        const track = TRACKS_DATA[trackId];
+        let foundTopic = false;
+        track.phases.forEach(phase => {
+          const topic = phase.topics.find(t => t.id === topicId);
+          if (topic) {
+            allQuestions = topic.questions;
+            document.getElementById('currentTopicLabel').innerText = topic.name;
+            foundTopic = true;
+          }
+        });
+        if (!foundTopic) {
+          // If topic not found in track, load selection UI
+          showTopicSelection();
+        }
+      } else {
+        showTopicSelection();
+      }
+      renderQuestions();
+    }
+
+    function showTopicSelection() {
+      const grid = document.getElementById('problemGrid');
+      const track = TRACKS_DATA[trackId];
+      document.getElementById('currentTopicLabel').innerText = `Select a Topic from ${track.title}`;
+      
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; width: 100%;">
+          ${track.phases.flatMap(phase => phase.topics).map(topic => `
+            <div class="problem-card" style="cursor: pointer; text-align: center; justify-content: center; min-height: 150px;" 
+                 onclick="window.location.href='practice.html?track=${trackId}&topic=${topic.id}'">
+              <h3 style="margin: 0;">${topic.name}</h3>
+              <p style="font-size: 0.8rem; color: var(--muted);">${topic.questions.length} Questions</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      // Stop further rendering
+      allQuestions = [];
+    }
+
+    function renderQuestions() {
+      if (allQuestions.length === 0 && !topicId) return; 
+      
+      const grid = document.getElementById('problemGrid');
+      const searchTerm = document.getElementById('questionSearch').value.toLowerCase();
+      const difficulty = document.getElementById('difficultyFilter').value;
+      const progress = getProgress()[trackId];
+
+      const filtered = allQuestions.filter(q => {
+        const matchesSearch = q.title.toLowerCase().includes(searchTerm) || (q.tags && q.tags.some(t => t.toLowerCase().includes(searchTerm)));
+        const matchesDiff = difficulty === 'all' || q.difficulty === difficulty;
+        return matchesSearch && matchesDiff;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted);">No questions found matching your filters.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(q => {
+        const isAttempted = progress.attempted.includes(q.id);
+        const isCompleted = progress.completed.includes(q.id);
+        
+        return `
+          <div class="problem-card ${isCompleted ? 'completed' : ''}">
+            <div class="problem-meta">
+              <span class="difficulty ${q.difficulty.toLowerCase()}">${q.difficulty}</span>
+              <span class="problem-topic">${q.tags ? q.tags.join(' • ') : ''}</span>
+              ${isCompleted ? '<i class="fas fa-check-circle" style="color: #22c55e; margin-left: auto;"></i>' : ''}
+            </div>
+            <h3>${q.title}</h3>
+            <p style="font-size: 0.9rem; color: var(--muted);">${q.description || 'Practice this problem to improve your skills.'}</p>
+            <div class="problem-actions">
+              <a href="${q.link}" target="_blank" class="btn-leetcode" onclick="handleSolve('${q.id}')">
+                <i class="fab fa-battle-net"></i> Solve on ${q.platform}
+              </a>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn-details" style="flex: 1;" onclick="showDetails('${q.id}')">
+                  <i class="fas fa-info-circle"></i> View Details
+                </button>
+                <button class="btn-details" style="flex: 1; border-color: ${isCompleted ? '#22c55e' : 'var(--card-border)'};" onclick="toggleComplete('${q.id}')">
+                  <i class="fas ${isCompleted ? 'fa-undo' : 'fa-check'}"></i> ${isCompleted ? 'Done' : 'Mark Done'}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleSolve(id) {
+      saveProgress(trackId, id, 'attempted');
+      renderQuestions();
+    }
+
+    function toggleComplete(id) {
+      saveProgress(trackId, id, 'completed');
+      renderQuestions();
+    }
+
+    function showDetails(id) {
+      const q = allQuestions.find(item => item.id === id);
+      if (!q) return;
+
+      document.getElementById('modalTitle').innerText = q.title;
+      document.getElementById('modalDifficulty').innerText = q.difficulty;
+      document.getElementById('modalDifficulty').className = `difficulty ${q.difficulty.toLowerCase()}`;
+      document.getElementById('modalPrereq').innerText = q.topicPrerequisites || "General knowledge of the topic.";
+      document.getElementById('modalApproach').innerText = q.approach || "1. Analyze the problem requirements.\n2. Consider edge cases.\n3. Implement the most efficient solution.";
+
+      document.getElementById('detailsModal').classList.add('active');
+    }
+
+    function closeDetailsModal() {
+      document.getElementById('detailsModal').classList.remove('active');
+    }
+
+    document.getElementById('questionSearch').oninput = renderQuestions;
+    document.getElementById('difficultyFilter').onchange = renderQuestions;
+
+    // THEME TOGGLE Logic moved to data.js
+
+    // Initialize
+    loadInitialData();
+  </script>
+
+</body>
+</html>

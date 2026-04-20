@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | AI Mentor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="data.js"></script>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+
+    <div class="nav-links">
+      <a href="javascript:handleHomeNav()" class="active">Home</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="practice.html">Practice</a>
+      <a href="profile.html">Profile</a>
+      <a href="interview.html">Interview</a>
+    </div>
+
+    <div class="nav-right">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      <div style="position: relative; display: flex; align-items: center; gap: 12px; padding: 6px 12px; border-radius: 12px;">
+        <span id="userNameNav" style="font-weight: 600; font-size: 0.95rem; color: var(--text);">User</span>
+        <div id="profileTrigger" class="profile-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;">
+          <span id="userInitial">V</span>
+        </div>
+        <!-- DROPDOWN -->
+        <div id="profileDropdown" class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px; width: 160px; z-index: 1001; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <button id="logoutBtn" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-weight: 600; font-family: inherit; display: flex; align-items: center; gap: 10px; border-radius: 8px; transition: background 0.2s;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="dashboard-container">
+    
+    <!-- WELCOME SECTION -->
+    <header class="welcome-header">
+      <h1>Welcome back, <span id="userNameDisplay">Valini</span> 👋</h1>
+      <p>Continue your placement journey with AI guidance.</p>
+    </header>
+
+    <!-- STATS SECTION -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Interview Prep</h3>
+        <span class="value" id="interviewsVal">0</span>
+        <p style="font-size: 0.8rem; color: var(--muted);">Mock Sessions Taken</p>
+      </div>
+      <div class="stat-card">
+        <h3>Current Streak</h3>
+        <span class="value" id="streakVal">0 Days</span>
+        <p id="streakMsg" style="font-size: 0.8rem; color: var(--muted);">Start solving to build a streak! 🔥</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Solved</h3>
+        <span class="value" id="totalSolvedVal">0</span>
+        <p id="totalAttemptedVal" style="font-size: 0.8rem; color: var(--secondary);">0 Attempted</p>
+      </div>
+    </section>
+
+    <!-- MAIN ACTION CARDS -->
+    <section class="action-grid">
+      <div class="action-card" onclick="window.location.href='roadmap.html'">
+        <i class="fas fa-map-marked-alt"></i>
+        <div>
+          <h2>Your Learning Roadmap</h2>
+          <p>Follow structured DSA sheets and AI-generated paths</p>
+        </div>
+        <button class="btn-primary" onclick="event.stopPropagation(); window.location.href='roadmap.html'">View Roadmap</button>
+      </div>
+
+      <div class="action-card" onclick="window.location.href='interview.html'">
+        <i class="fas fa-video"></i>
+        <div>
+          <h2>Practice Interviews</h2>
+          <p>Simulate real interview scenarios with AI feedback</p>
+        </div>
+        <button class="btn-primary" onclick="event.stopPropagation(); window.location.href='interview.html'">Start Interview</button>
+      </div>
+
+      <div class="action-card" onclick="window.location.href='practice.html'">
+        <i class="fas fa-tasks"></i>
+        <div>
+          <h2>Daily Practice Hub</h2>
+          <p>Solve topic-wise problems and track your progress</p>
+        </div>
+        <button class="btn-primary" onclick="event.stopPropagation(); window.location.href='practice.html'">Start Practice</button>
+      </div>
+
+      <div class="action-card" onclick="window.location.href='chat.html'">
+        <i class="fas fa-robot"></i>
+        <div>
+          <h2>AI Mentor Chat</h2>
+          <p>Ask anything about coding, projects, placements</p>
+        </div>
+        <button class="btn-primary" onclick="event.stopPropagation(); window.location.href='chat.html'">Start Chat</button>
+      </div>
+    </section>
+
+    <section class="sheets-section">
+      <h2 class="section-title"><i class="fas fa-layer-group gradient"></i> Popular DSA Sheets</h2>
+      <div class="sheets-grid">
+        <div class="sheet-card" style="cursor: pointer;" onclick="window.open('https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/', '_blank')">
+          <div class="sheet-info">
+            <h3>TakeUForward DSA Sheet</h3>
+            <p>Master Striver's SDE Sheet with 180+ curated problems.</p>
+          </div>
+          <button class="btn-secondary" onclick="event.stopPropagation(); window.open('https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/', '_blank')">Start Practice</button>
+        </div>
+        <div class="sheet-card" style="cursor: pointer;" onclick="window.open('https://docs.google.com/spreadsheets/d/1APnaCollegeDSAsheet', '_blank')">
+          <div class="sheet-info">
+            <h3>Apna College DSA Sheet</h3>
+            <p>Comprehensive guide to crack top tier tech companies.</p>
+          </div>
+          <button class="btn-secondary" onclick="event.stopPropagation(); window.open('https://docs.google.com/spreadsheets/d/1APnaCollegeDSAsheet', '_blank')">Start Practice</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOWER DASHBOARD -->
+    <div class="dashboard-bottom">
+      
+      <!-- RECOMMENDED SECTION -->
+      <section class="recommended-section">
+        <h2 class="section-title"><i class="fas fa-magic gradient"></i> AI Personalized Guidance</h2>
+        <div id="aiRecommendations" class="recommended-list">
+          <div class="rec-item">
+            <div style="display: flex; gap: 15px; align-items: center; width: 100%;">
+              <i class="fas fa-circle-notch fa-spin" style="color: var(--primary);"></i>
+              <div>
+                <p style="font-weight: 600;">Analyzing your progress...</p>
+                <p style="font-size: 0.8rem; color: var(--muted);">Our AI is finding the best path for you.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROGRESS & ACTIVITY -->
+      <section class="sidebar-section">
+        <div class="progress-container">
+          <div class="progress-header">
+            <h3 style="font-size: 0.95rem;">Overall Readiness</h3>
+            <span id="readinessVal" style="color: var(--primary); font-weight: 700;">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="readinessBar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--muted); margin-top: 10px;">Keep practicing to hit your 80% goal!</p>
+          
+          <h3 style="font-size: 1.1rem; margin-top: 2rem;">Topic Progress</h3>
+          <div id="topicProgressList" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 12px;">
+            <!-- Dynamic Topics -->
+            <div class="activity-item" style="padding: 10px;">Loading topics...</div>
+          </div>
+          
+          <h3 style="font-size: 1.1rem; margin-top: 2rem;">Recent Activity</h3>
+          <div class="activity-list">
+            <div class="activity-item">
+              Completed Arrays practice under TakeUForward sheet.
+            </div>
+            <div class="activity-item">
+              Last interview score: 7/10 (Focus on System Design).
+            </div>
+            <div class="activity-item">
+              Started "Mock HR Session" with AI Coach.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script>
+    // AUTH GUARD & PERSONALIZATION
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (!user) {
+      window.location.href = 'auth.html';
+    } else {
+      document.getElementById('userNameDisplay').innerText = user.name;
+      document.getElementById('userNameNav').innerText = user.name;
+      document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
+    }
+
+    // PROFILE DROPDOWN
+    const profileTrigger = document.getElementById('profileTrigger');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    profileTrigger.onclick = (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    };
+
+    window.onclick = () => profileDropdown.classList.add('hidden');
+
+    logoutBtn.onclick = () => {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    };
+
+    // DASHBOARD LOGIC
+    function initDashboard() {
+      const stats = getUserStats();
+      const progress = getProgress();
+      
+      // Update Streak
+      document.getElementById('streakVal').innerText = `${stats.streak.current} Days`;
+      if (stats.streak.current > 0) {
+        document.getElementById('streakMsg').innerText = "Keep the fire burning! 🔥";
+      }
+
+      // Interviews
+      document.getElementById('interviewsVal').innerText = stats.interviewsTaken;
+
+      // Total Stats
+      document.getElementById('totalSolvedVal').innerText = stats.questionsSolved;
+      document.getElementById('totalAttemptedVal').innerText = `${stats.questionsAttempted} Attempted`;
+
+      // Overall Readiness (Weighted average)
+      const readiness = Math.min(100, Math.round((stats.questionsSolved / 20) * 100)); // Target 20 questions for 100%
+      document.getElementById('readinessVal').innerText = `${readiness}%`;
+      document.getElementById('readinessBar').style.width = `${readiness}%`;
+
+      // Topic Progress List
+      renderTopicProgress(progress);
+
+      fetchAIRecommendations(progress, stats.streak);
+    }
+
+    function renderTopicProgress(progress) {
+      const container = document.getElementById('topicProgressList');
+      const tracks = ['dsa']; // Can expand to more
+      let html = '';
+
+      tracks.forEach(trackId => {
+        TRACKS_DATA[trackId].phases.forEach(phase => {
+          phase.topics.forEach(topic => {
+            const completedCount = topic.questions.filter(q => progress[trackId].completed.includes(q.id)).length;
+            const percent = topic.questions.length > 0 ? Math.round((completedCount / topic.questions.length) * 100) : 0;
+            
+            html += `
+              <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; border: 1px solid var(--card-border);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px;">
+                  <span>${topic.name}</span>
+                  <span style="color: var(--primary); font-weight: 600;">${percent}%</span>
+                </div>
+                <div style="height: 4px; background: var(--glass); border-radius: 2px;">
+                  <div style="width: ${percent}%; height: 100%; background: var(--gradient); border-radius: 2px;"></div>
+                </div>
+              </div>
+            `;
+          });
+        });
+      });
+      container.innerHTML = html;
+    }
+
+    async function fetchAIRecommendations(progress, streak) {
+      const container = document.getElementById('aiRecommendations');
+      const API_URL = 'http://localhost:5000';
+
+      const prompt = `Analyze this student's progress:
+      DSA Solved: ${progress.dsa.completed.length} (IDs: ${progress.dsa.completed.join(',')})
+      Streak: ${streak.currentStreak} days.
+      Strongest Area: ${progress.dsa.completed.length > 5 ? 'Arrays' : 'None yet'}
+      Weakest Area: Focus needed.
+      Provide 3 short, actionable recommendations for placement preparation.`;
+
+      try {
+        const response = await fetch(`${API_URL}/ai-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            message: prompt,
+            name: user.name,
+            year: user.year,
+            course: user.course,
+            branch: user.branch
+          })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          const recs = data.reply.split('\n').filter(line => line.trim().length > 5).slice(0, 3);
+          container.innerHTML = recs.map((rec, i) => `
+            <div class="rec-item">
+              <div style="display: flex; gap: 15px; align-items: center; width: 100%;">
+                <i class="fas ${i === 0 ? 'fa-fire' : 'fa-lightbulb'}" style="color: var(--primary);"></i>
+                <div>
+                  <p style="font-size: 0.9rem; font-weight: 500;">${rec.replace(/^\d+\.\s*/, '')}</p>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = `<p style="padding: 10px; color: var(--muted);">Connect to server for AI insights.</p>`;
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="padding: 10px; color: var(--muted);">AI insights unavailable (Offline).</p>`;
+      }
+    }
+
+    initDashboard();
+  </script>
+
+</body>
+</html>

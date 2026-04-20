@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock AI Interview | AI Mentor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="interview.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+    <div class="nav-links">
+      <a href="javascript:handleHomeNav()">Home</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="practice.html">Practice</a>
+      <a href="profile.html">Profile</a>
+      <a href="interview.html" class="active">Interview</a>
+    </div>
+    <div class="nav-right">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      <div id="profileTrigger" style="position: relative; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+        <span id="userNameNav" style="font-weight: 600; font-size: 0.95rem;">User</span>
+        <div class="profile-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+          <span id="userInitial">V</span>
+        </div>
+        <div id="profileDropdown" class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px; width: 160px; z-index: 1001;">
+          <button id="logoutBtn" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-family: inherit;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="interview-container">
+    
+    <!-- STEP 1: LANDING -->
+    <div id="stepLanding" class="interview-card">
+      <div class="landing-text">
+        <h1 class="gradient">Mock AI Interview 🎤</h1>
+        <p>Expert-level practice tailored to your profile.</p>
+        <div class="user-profile-summary">
+          <span id="userProfileText">3rd Year B.Tech CSE</span>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showStep('stepSelection')">Start Interview</button>
+    </div>
+
+    <!-- STEP 2: SELECTION -->
+    <div id="stepSelection" class="interview-card step-hidden">
+      <h3>Interview Setup</h3>
+      <div class="selection-grid">
+        <div id="typeHR" class="select-card active" onclick="selectType('HR')">
+          <i class="fas fa-user-tie gradient"></i>
+          <h4>HR Interview</h4>
+        </div>
+        <div id="typeDSA" class="select-card" onclick="selectType('DSA')">
+          <i class="fas fa-code gradient"></i>
+          <h4>DSA Interview</h4>
+        </div>
+      </div>
+
+      <div class="mode-selection" style="margin-top: 2rem;">
+        <div id="modeText" class="mode-btn active" onclick="selectMode('text')">
+          <i class="fas fa-keyboard"></i>
+          <span>Text Mode</span>
+        </div>
+        <div id="modeVoice" class="mode-btn" onclick="selectMode('voice')">
+          <i class="fas fa-microphone"></i>
+          <span>Voice Mode</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" style="margin-top: 2rem;" onclick="beginInterview()">Launch Session</button>
+    </div>
+
+    <!-- STEP 3: QUESTIONING -->
+    <div id="stepQuestion" class="interview-card step-hidden">
+      <div class="interview-progress" id="progressIndicator">Question 1</div>
+      <div class="question-text" id="questionText">Initializing...</div>
+      
+      <div class="mic-status" id="micStatus" style="display: none;">
+        <i class="fas fa-microphone"></i> <span>Listening...</span>
+      </div>
+
+      <div class="answer-area">
+        <textarea id="userAnswer" placeholder="Type your answer here..."></textarea>
+        <div id="liveTranscript" class="live-transcript" style="display: none;">Speak now, your voice will appear here...</div>
+      </div>
+
+      <div id="feedbackSection" class="feedback-box step-hidden">
+        <p id="feedbackText" style="font-size: 0.95rem; line-height: 1.5; color: var(--primary);"></p>
+      </div>
+
+      <div class="button-group" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button id="submitBtn" class="btn-primary" onclick="handleSubmission()">Submit Answer</button>
+        <button id="replayBtn" class="btn-secondary" style="display: none;" onclick="replayQuestion()">Replay Question</button>
+        <button id="endEarlyBtn" class="btn-secondary" onclick="confirmEnd()">End Interview</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: RESULTS -->
+    <div id="stepResults" class="interview-card step-hidden">
+      <h2 class="gradient">Final Evaluation 🎉</h2>
+      <div class="final-score" id="finalScoreDisplay">--</div>
+      <div class="results-stats">
+        <div class="stat-item">
+          <span class="label">Completion</span>
+          <span class="value" id="completionRateDisplay">0%</span>
+        </div>
+        <div class="stat-item">
+          <span class="label">Confidence</span>
+          <span class="value" id="confidenceLevelDisplay">--</span>
+        </div>
+        <div class="stat-item">
+          <span class="label">Communication</span>
+          <span class="value" id="communicationDisplay">--</span>
+        </div>
+      </div>
+
+      <div id="uiMessageDisplay" class="ui-message-box hidden"></div>
+
+      <div class="results-grid">
+        <div class="feedback-card">
+          <i class="fas fa-check-circle" style="color: #22c55e;"></i>
+          <h4>Strengths</h4>
+          <ul id="strengthsList"></ul>
+        </div>
+        <div class="feedback-card">
+          <i class="fas fa-arrow-up" style="color: var(--secondary);"></i>
+          <h4>Improvements</h4>
+          <ul id="improvementsList"></ul>
+        </div>
+      </div>
+
+      <div class="feedback-box" style="margin-top: 1.5rem; margin-bottom: 2rem; width: 100%; max-height: 200px; overflow-y: auto;">
+        <h4 style="margin-bottom: 0.5rem;">Professional Summary</h4>
+        <p id="summaryText" style="font-size: 0.95rem; white-space: pre-wrap;"></p>
+      </div>
+
+      <div class="button-group" style="display: flex; gap: 1rem; justify-content: center;">
+        <button class="btn-primary" onclick="location.reload()">Start New Session</button>
+        <button class="btn-secondary" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: RESUME UPLOAD -->
+  <div id="resumeModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h2 class="gradient">Upload Your Resume 📄</h2>
+      <p>Our AI uses your resume to personalize the interview experience.</p>
+      
+      <div id="dropZone" class="upload-zone">
+        <i class="fas fa-cloud-upload-alt gradient"></i>
+        <p>Drag & Drop your resume (PDF) or <span>Browse</span></p>
+        <input type="file" id="resumeInput" accept=".pdf" style="display: none;">
+      </div>
+      <div id="fileName" class="file-name hidden"></div>
+      
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeResumeModal()">Skip & General Interview</button>
+        <button id="uploadBtn" class="btn-primary" onclick="handleResumeUpload()">Upload and Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // AUTH & PERSONALIZATION
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) window.location.href = 'auth.html';
+    
+    document.getElementById('userNameNav').innerText = user.name;
+    document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
+    document.getElementById('userProfileText').innerText = `${user.year} ${user.course} ${user.branch} student`;
+
+    // STATE
+    const API_URL = 'http://localhost:5000';
+    let sessionId = null;
+    let selectedType = 'HR';
+    let selectedMode = 'text';
+    let currentQuestion = "";
+    let silenceTimer = null;
+    let questionStartTime = null;
+    let isAISpeaking = false;
+
+    // SPEECH TOOLS
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        document.getElementById('micStatus').classList.add('active');
+        document.getElementById('micStatus').querySelector('span').innerText = "Listening...";
+        resetSilenceTimer();
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        document.getElementById('userAnswer').value = transcript;
+        document.getElementById('liveTranscript').innerText = transcript;
+        resetSilenceTimer();
+      };
+
+      recognition.onend = () => {
+        if (!isAISpeaking) {
+          document.getElementById('micStatus').classList.remove('active');
+          document.getElementById('micStatus').querySelector('span').innerText = "Idle";
+        }
+      };
+    }
+
+    function startListening() {
+      if (selectedMode === 'voice' && recognition && !isAISpeaking) {
+        try { 
+          recognition.start(); 
+          document.getElementById('micStatus').classList.add('active');
+          document.getElementById('micStatus').querySelector('span').innerText = "Listening...";
+          document.getElementById('micStatus').querySelector('i').className = "fas fa-microphone";
+        } catch(e) {
+          console.log("Recognition already started or failed");
+        }
+      }
+    }
+
+    function resetSilenceTimer() {
+      clearTimeout(silenceTimer);
+      if (selectedMode === 'voice') {
+        silenceTimer = setTimeout(() => {
+          if (!isAISpeaking) speak("Are you there? Please answer the question.");
+        }, 15000); // Increased to 15s for better flow
+      }
+    }
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      isAISpeaking = true;
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      utterance.onstart = () => {
+        document.getElementById('micStatus').style.display = 'flex';
+        document.getElementById('micStatus').classList.remove('active'); // No pulse while speaking
+        document.getElementById('micStatus').querySelector('span').innerText = "AI Interviewer is speaking...";
+        document.getElementById('micStatus').querySelector('i').className = "fas fa-volume-up"; // Speaker icon
+        if (recognition) try { recognition.stop(); } catch(e) {}
+      };
+
+      utterance.onend = () => {
+        isAISpeaking = false;
+        document.getElementById('micStatus').querySelector('span').innerText = "Preparing to listen...";
+        document.getElementById('micStatus').querySelector('i').className = "fas fa-microphone";
+        
+        // Brief pause before starting mic for professional feel
+        setTimeout(() => {
+          if (selectedMode === 'voice') startListening();
+        }, 600);
+      };
+
+      utterance.onerror = (e) => {
+        console.error("Speech Error:", e);
+        isAISpeaking = false;
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // NAVIGATION
+    function showStep(stepId) {
+      document.querySelectorAll('.interview-card').forEach(card => card.classList.add('step-hidden'));
+      document.getElementById(stepId).classList.remove('step-hidden');
+    }
+
+    function selectType(t) {
+      selectedType = t;
+      console.log("Selected Type:", t);
+      document.getElementById('typeHR').classList.toggle('active', t === 'HR');
+      document.getElementById('typeDSA').classList.toggle('active', t === 'DSA');
+    }
+
+    function selectMode(m) {
+      selectedMode = m;
+      console.log("Selected Mode:", m);
+      document.getElementById('modeText').classList.toggle('active', m === 'text');
+      document.getElementById('modeVoice').classList.toggle('active', m === 'voice');
+    }
+
+    // API FLOW
+    async function beginInterview() {
+      const storedResume = localStorage.getItem('userResumeText');
+      if (!storedResume) {
+        openResumeModal();
+        return;
+      }
+      recordInterview();
+      startInterviewSession(storedResume);
+    }
+
+    async function startInterviewSession(resumeText = "") {
+      if (window.location.protocol === 'file:') {
+        alert("CRITICAL: You are opening this file directly. Please access it via http://localhost:5000 for AI Interview features to work.");
+        return;
+      }
+
+      showStep('stepQuestion');
+      document.getElementById('questionText').innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Entering Interview Room...<br><small style="color: var(--primary); font-size: 0.8rem;">${resumeText ? "Personalizing based on your resume..." : "General session loading..."}</small>`;
+      
+      try {
+        const res = await fetch(`${API_URL}/start-interview`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ 
+            type: selectedType, 
+            name: user.name, 
+            year: user.year, 
+            course: user.course, 
+            branch: user.branch,
+            resumeText: resumeText
+          })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          sessionId = data.sessionId;
+          currentQuestion = data.firstQuestion;
+          displayQuestion(currentQuestion);
+        } else {
+          const detail = data.details || data.error || "Unknown Failure";
+          alert(`Failed to join interview room: ${detail}`);
+          showStep('stepSelection');
+        }
+      } catch (e) {
+        console.error("Connection Error:", e);
+        alert("Server not reachable. Make sure 'node index.js' is running.");
+        showStep('stepSelection');
+      }
+    }
+
+    // RESUME MODAL & UPLOAD
+    function openResumeModal() {
+      document.getElementById('resumeModal').classList.remove('hidden');
+    }
+    function closeResumeModal() {
+      document.getElementById('resumeModal').classList.add('hidden');
+      startInterviewSession(""); // Proceed with general interview
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    const resumeInput = document.getElementById('resumeInput');
+    let selectedFile = null;
+
+    dropZone.onclick = () => resumeInput.click();
+    resumeInput.onchange = (e) => handleFileSelection(e.target.files[0]);
+    
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
+    dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+    dropZone.ondrop = (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFileSelection(e.dataTransfer.files[0]);
+    };
+
+    function handleFileSelection(file) {
+      if (!file || file.type !== 'application/pdf') {
+        alert("Please upload a PDF file.");
+        return;
+      }
+      selectedFile = file;
+      document.getElementById('fileName').innerText = `Selected: ${file.name}`;
+      document.getElementById('fileName').classList.remove('hidden');
+    }
+
+    async function handleResumeUpload() {
+      if (!selectedFile) return alert("Please select a file first.");
+      
+      const btn = document.getElementById('uploadBtn');
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Extracting...`;
+      btn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('resume', selectedFile);
+
+      try {
+        const res = await fetch(`${API_URL}/upload-resume`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('userResumeText', data.resumeText);
+          document.getElementById('resumeModal').classList.add('hidden');
+          startInterviewSession(data.resumeText);
+        } else {
+          alert("Upload failed: " + data.error);
+        }
+      } catch (e) {
+        alert("Connection error during upload.");
+      } finally {
+        btn.innerHTML = `Upload and Proceed`;
+        btn.disabled = false;
+      }
+    }
+
+    function displayQuestion(q) {
+      if (!q) {
+        document.getElementById('questionText').innerText = "Error: Question was empty. Please restart.";
+        return;
+      }
+      document.getElementById('questionText').innerText = q;
+      document.getElementById('userAnswer').value = "";
+      document.getElementById('feedbackSection').classList.add('step-hidden');
+      questionStartTime = Date.now();
+      
+      if (selectedMode === 'voice') {
+        document.getElementById('micStatus').style.display = 'flex';
+        document.getElementById('liveTranscript').style.display = 'block';
+        document.getElementById('replayBtn').style.display = 'block';
+        speak(q);
+      } else {
+        document.getElementById('micStatus').style.display = 'none';
+        document.getElementById('liveTranscript').style.display = 'none';
+        document.getElementById('replayBtn').style.display = 'none';
+      }
+    }
+
+    async function handleSubmission() {
+      const answer = document.getElementById('userAnswer').value.trim();
+      if (!answer) return alert("Please provide an answer.");
+
+      if (recognition) try { recognition.stop(); } catch(e) {}
+      clearTimeout(silenceTimer);
+      
+      document.getElementById('questionText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your answer...`;
+      
+      const timeTaken = questionStartTime ? Math.round((Date.now() - questionStartTime) / 1000) : 0;
+      
+      try {
+        const res = await fetch(`${API_URL}/next-question`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ sessionId, previousAnswer: answer, timeTaken })
+        });
+        
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('progressIndicator').innerText = `Question ${data.questionCount}`;
+          const aiResponse = data.aiResponse;
+          currentQuestion = aiResponse; 
+          
+          if (data.isConcluded) {
+            document.getElementById('submitBtn').innerText = "Get Evaluation";
+            document.getElementById('submitBtn').onclick = finishInterview;
+            document.getElementById('userAnswer').style.display = "none";
+          }
+
+          displayQuestion(aiResponse);
+        } else {
+          alert(`Error: ${data.details || data.error}`);
+          document.getElementById('questionText').innerText = "An error occurred. Please try again or end the session.";
+        }
+      } catch (e) {
+        console.error("Submission Error:", e);
+        alert("Server connection lost.");
+      }
+    }
+
+    function replayQuestion() { 
+      if (currentQuestion) speak(currentQuestion);
+      else alert("No question to replay.");
+    }
+
+    function confirmEnd() {
+      if (confirm("End the interview and get your score?")) finishInterview();
+    }
+
+    async function finishInterview() {
+      if (recognition) try { recognition.stop(); } catch(e) {}
+      clearTimeout(silenceTimer);
+      showStep('stepResults');
+      document.getElementById('finalScoreDisplay').innerHTML = `<i class="fas fa-circle-notch fa-spin" style="font-size: 2rem;"></i>`;
+
+      try {
+        const res = await fetch(`${API_URL}/end-interview`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          document.getElementById('finalScoreDisplay').innerText = data.score;
+          document.getElementById('summaryText').innerText = data.summary;
+          
+          document.getElementById('completionRateDisplay').innerText = data.completionRate;
+          document.getElementById('confidenceLevelDisplay').innerText = data.confidenceLevel;
+          document.getElementById('communicationDisplay').innerText = data.communication;
+
+          if (data.uiMessage) {
+            const uiBox = document.getElementById('uiMessageDisplay');
+            uiBox.innerText = data.uiMessage;
+            uiBox.classList.remove('hidden');
+          }
+
+          const strengths = document.getElementById('strengthsList');
+          const improvements = document.getElementById('improvementsList');
+          strengths.innerHTML = data.strengths.map(s => `<li>${s}</li>`).join('');
+          improvements.innerHTML = data.improvements.map(i => `<li>${i}</li>`).join('');
+        } else {
+          alert("Evaluation failed on server.");
+          document.getElementById('summaryText').innerText = "Sorry, we couldn't generate a summary right now.";
+        }
+      } catch (e) {
+        console.error("Evaluation Error:", e);
+        alert("Failed to connect to results server.");
+      }
+    }
+
+    // THEME & LOGOUT
+    // Theme logic moved to data.js
+    document.getElementById('profileTrigger').onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('profileDropdown').classList.toggle('hidden');
+    };
+    window.onclick = () => document.getElementById('profileDropdown').classList.add('hidden');
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    };
+  </script>
+
+</body>
+</html>

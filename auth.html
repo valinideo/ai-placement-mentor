@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Signup | AI Mentor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth.css">
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <h2 class="logo" style="margin-bottom: 20px; font-size: 2rem;">⚡ AI Mentor</h2>
+      <h1 id="authTitle">Welcome Back</h1>
+      <p id="authSubtitle">Please login to continue your journey</p>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" class="auth-form">
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" placeholder="name@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-primary" style="padding: 14px;">Sign In</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signupForm" class="auth-form hidden">
+      <div class="form-group">
+        <label for="signupName">Full Name</label>
+        <input type="text" id="signupName" placeholder="Valini Deo" required>
+      </div>
+      <div class="form-group">
+        <label for="signupEmail">Email Address</label>
+        <input type="email" id="signupEmail" placeholder="name@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="••••••••" required>
+      </div>
+
+      <div class="academic-section">
+        <h3>Academic Details</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="studentType">Status</label>
+            <select id="studentType">
+              <option value="Student">Student</option>
+              <option value="Graduate">Graduate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="studyYear">Year</label>
+            <select id="studyYear">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="course">Course</label>
+            <select id="course">
+              <option value="B.Tech">B.Tech</option>
+              <option value="BCA">BCA</option>
+              <option value="MCA">MCA</option>
+              <option value="M.Tech">M.Tech</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="branch">Branch</label>
+            <select id="branch">
+              <option value="CSE">CSE</option>
+              <option value="IT">IT</option>
+              <option value="ECE">ECE</option>
+              <option value="Mechanical">Mechanical</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="signupResume">Resume (Optional PDF)</label>
+        <div class="file-input-wrapper" style="border: 1px dashed var(--card-border); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;">
+          <input type="file" id="signupResume" accept=".pdf" style="width: 100%; cursor: pointer;">
+          <small id="resumeStatus" style="display: block; margin-top: 5px; color: var(--muted);">Max size 5MB</small>
+        </div>
+      </div>
+
+      <button type="submit" id="signupBtn" class="btn-primary" style="padding: 14px; margin-top: 10px;">Create Account</button>
+    </form>
+
+    <div class="auth-toggle">
+      <span id="toggleText">Don't have an account?</span>
+      <a id="toggleLink">Sign Up</a>
+    </div>
+
+    <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; color: var(--card-border);">
+      <hr style="flex: 1; border: 0.5px solid var(--card-border);">
+      <span style="font-size: 0.8rem; color: var(--muted);">OR</span>
+      <hr style="flex: 1; border: 0.5px solid var(--card-border);">
+    </div>
+
+    <button id="demoBtn" class="demo-btn">
+      <i class="fas fa-play"></i> Continue as Demo User
+    </button>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const toggleLink = document.getElementById('toggleLink');
+    const toggleText = document.getElementById('toggleText');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const demoBtn = document.getElementById('demoBtn');
+
+    // TOGGLE LOGIC
+    toggleLink.onclick = () => {
+      const isLogin = !loginForm.classList.contains('hidden');
+      if (isLogin) {
+        loginForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+        authTitle.innerText = "Create Account";
+        authSubtitle.innerText = "Join the future of AI mentorship";
+        toggleText.innerText = "Already have an account?";
+        toggleLink.innerText = "Sign In";
+      } else {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        authTitle.innerText = "Welcome Back";
+        authSubtitle.innerText = "Please login to continue your journey";
+        toggleText.innerText = "Don't have an account?";
+        toggleLink.innerText = "Sign Up";
+      }
+    };
+
+    // SAVE USER TO LOCALSTORAGE
+    function saveUserAndRedirect(userData) {
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      window.location.href = 'dashboard.html';
+    }
+
+    const API_URL = 'http://localhost:5000';
+
+    // LOGIN HANDLER
+    loginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch(`${API_URL}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          saveUserAndRedirect({
+            name: email.split('@')[0], 
+            email: email,
+            year: '3rd Year',
+            course: 'B.Tech',
+            branch: 'CSE'
+          });
+        } else {
+          alert("Login failed: " + data.message);
+        }
+      } catch (err) {
+        console.error("Auth Error:", err);
+        alert("Server not reachable. Please make sure node server/index.js is running!");
+      }
+    };
+
+    // SIGNUP HANDLER
+    signupForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const resumeFile = document.getElementById('signupResume').files[0];
+      const signupBtn = document.getElementById('signupBtn');
+      let extractedResumeText = "";
+
+      signupBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+      signupBtn.disabled = true;
+
+      // 1. UPLOAD RESUME IF EXISTS
+      if (resumeFile) {
+        const formData = new FormData();
+        formData.append('resume', resumeFile);
+        try {
+          const res = await fetch(`${API_URL}/upload-resume`, {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok) {
+            extractedResumeText = data.resumeText;
+            localStorage.setItem('userResumeText', extractedResumeText);
+          }
+        } catch (err) {
+          console.error("Resume Upload Error:", err);
+          // We can proceed even if resume fails, or alert user
+        }
+      }
+
+      const userPayload = {
+        name: document.getElementById('signupName').value,
+        email: document.getElementById('signupEmail').value,
+        password: document.getElementById('signupPassword').value,
+        studentType: document.getElementById('studentType').value,
+        year: document.getElementById('studyYear').value,
+        course: document.getElementById('course').value,
+        branch: document.getElementById('branch').value
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userPayload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          saveUserAndRedirect(data.user);
+        } else {
+          alert("Signup failed: " + data.message);
+        }
+      } catch (err) {
+        console.error("Auth Error:", err);
+        alert("Server not reachable. Please make sure node server/index.js is running!");
+      } finally {
+        signupBtn.innerHTML = `Create Account`;
+        signupBtn.disabled = false;
+      }
+    };
+
+    // DEMO HANDLER
+    demoBtn.onclick = () => {
+      // Demo user can still be fast-tracked
+      saveUserAndRedirect({
+        name: "Demo User",
+        email: "demo@ai-mentor.com",
+        year: "2nd Year",
+        course: "B.Tech",
+        branch: "CSE"
+      });
+    };
+  </script>
+
+</body>
+</html>

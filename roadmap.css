@@ -1,0 +1,234 @@
+/* ROADMAP SPECIFIC STYLES */
+
+.roadmap-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ROADMAP HEADER */
+.roadmap-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.roadmap-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.roadmap-header p {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+/* PATH SELECTOR */
+.path-selector {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+}
+
+.path-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 1.5rem 2.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 250px;
+  text-align: center;
+}
+
+.path-card i {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.path-card.active {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.path-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--secondary);
+}
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-bottom: 5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--card-border);
+  z-index: 0;
+}
+
+.phase-container {
+  position: relative;
+  padding-left: 60px;
+  animation: messageIn 0.5s ease-out backwards;
+}
+
+.phase-dot {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--bg);
+  border: 4px solid var(--primary);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.phase-header {
+  margin-bottom: 1.5rem;
+}
+
+.phase-header h2 {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.phase-header span {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.topic-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.topic-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 1.25rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.topic-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary);
+}
+
+.topic-item.completed {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--card-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.topic-item.completed .custom-checkbox {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.custom-checkbox i {
+  color: white;
+  font-size: 0.7rem;
+  display: none;
+}
+
+.topic-item.completed .custom-checkbox i {
+  display: block;
+}
+
+.topic-text {
+  flex: 1;
+}
+
+.topic-text h4 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.topic-text p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* LOWER SECTION (SHEETS & PROGRESS) */
+.roadmap-lower {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  margin-top: 4rem;
+}
+
+.sheets-grid-roadmap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.roadmap-progress-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ANIMATIONS */
+@keyframes messageIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .roadmap-lower {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .topic-list {
+    grid-template-columns: 1fr;
+  }
+  .path-selector {
+    flex-direction: column;
+    align-items: center;
+  }
+  .path-card {
+    width: 100%;
+    max-width: none;
+  }
+}

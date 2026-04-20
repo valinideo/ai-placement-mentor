@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Mentor | Crack Your Career with AI</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js"></script>
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- GLOWING BACKGROUND BLOBS -->
+  <div class="blob" style="top: 10%; left: -5%;"></div>
+  <div class="blob" style="top: 50%; right: -10%; animation-delay: -5s;"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+
+    <div class="nav-links">
+      <a href="javascript:handleHomeNav()">Home</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="practice.html">Practice</a>
+      <a href="profile.html">Profile</a>
+      <a href="interview.html">Interview</a>
+    </div>
+
+    <div class="nav-right">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      <button class="btn-primary" onclick="window.location.href='auth.html'">Start Training</button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section id="home" class="hero container">
+    <div class="hero-left">
+      
+
+      <h1>
+        Elevate Your Career with 
+        <span class="gradient">Intelligent AI Mentorship</span>
+      </h1>
+
+      <p class="subtext">
+        The all-in-one platform to master DSA, crack system design, and ace your dream job interviews with real-time AI feedback.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="window.location.href='auth.html'">Get Started Free <i class="fas fa-arrow-right"></i></button>
+        <button class="btn-secondary" onclick="window.location.href='practice.html'">Explore Practice Hub</button>
+      </div>
+    </div>
+
+    <!-- HERO VISUALS -->
+    <div class="hero-right">
+      <div class="card floating">
+        <h4><i class="fas fa-chart-line"></i> Analytics</h4>
+        <p>Problem Solving: <strong>Extremely High</strong></p>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 5px;">Top 1% of candidates this month</p>
+      </div>
+
+      <div class="card floating delay" style="margin-right: 40px;">
+        <h4><i class="fas fa-microphone"></i> Mock Session</h4>
+        <p>AI: "Explain the time complexity of QuickSort."</p>
+        <p style="font-size: 0.8rem; color: var(--primary); margin-top: 5px;">Analyzing response...</p>
+      </div>
+
+      <div class="card floating delay2">
+        <h4><i class="fas fa-code"></i> Roadmap</h4>
+        <p>DSA Mastery: <span style="color: var(--secondary);">92%</span></p>
+        <div style="height: 4px; background: var(--glass); border-radius: 2px; margin-top: 8px;">
+          <div style="width: 92%; height: 100%; background: var(--gradient); border-radius: 2px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section id="features" class="features container">
+    <div class="reveal">
+      <p class="tag" style="margin-bottom: 10px;">Why AI Mentor?</p>
+      <h2 style="font-size: 2.5rem;">Everything you need to <span class="gradient">Succeed</span></h2>
+    </div>
+
+    <div class="grid">
+      <div class="feature-card reveal">
+        <i class="fas fa-map-location-dot gradient"></i>
+        <h3>Adaptive Roadmaps</h3>
+        <p>AI analyzes your weak spots and generates a custom learning path just for you.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <i class="fas fa-brain gradient"></i>
+        <h3>DSA Practice</h3>
+        <p>Curated 450+ problems with instant step-by-step hints and optimized solutions.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <i class="fas fa-video gradient"></i>
+        <h3>Mock Interviews</h3>
+        <p>Real-time technical and HR interviews with industry-standard AI evaluation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHATBOT DEMO -->
+  <section id="demo" class="chat-demo container">
+    <div class="reveal">
+      <h2 style="font-size: 2.5rem;">Experience the <span class="gradient">Future</span></h2>
+      <p class="muted">Try 1-on-1 mentorship right now</p>
+    </div>
+
+    <div class="chat-box reveal">
+      <div id="chatContent" class="chat-content">
+        <div class="chat-msg ai">Hi! I'm your AI Mentor. I can help you with DSA, Mock Interviews, or Career Guidance. What's on your mind?</div>
+        <!-- User messages will appear here -->
+      </div>
+
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Ask about DSA or Interview tips..." />
+        <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta reveal">
+    <div class="container" style="background: var(--card); padding: 60px; border-radius: 32px; border: 1px solid var(--card-border);">
+      <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to land your <span class="gradient">Dream Job?</span></h2>
+      <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--muted);">Join 50,000+ students already using AI Mentor to crack top tech placements.</p>
+      <button class="btn-primary" onclick="window.location.href='auth.html'" style="padding: 18px 40px; font-size: 1.1rem;">Get Started For Free</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2 class="logo" style="margin-bottom: 20px;">⚡ AI Mentor</h2>
+          <p>Your intelligent companion for career success and personal growth.</p>
+          <div style="margin-top: 20px; font-size: 1.5rem; display: flex; gap: 20px;">
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-linkedin"></i>
+            <i class="fab fa-github"></i>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Roadmaps</a></li>
+            <li><a href="#">DSA Guide</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Discord</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align: center; border-top: 1px solid var(--card-border); padding-top: 20px; font-size: 0.9rem;">
+        &copy; 2024 AI Mentor. All rights reserved. Made with ❤️ for developers.
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODERN SCRIPTS -->
+  <script>
+    // THEME TOGGLE Logic moved to data.js
+    // Local script removed to avoid duplication
+
+    // SCROLL REVEAL (Intersection Observer)
+    const observerOptions = {
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // CHAT DEMO LOGIC
+    const chatContent = document.getElementById('chatContent');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(text, isAi) {
+      const msg = document.createElement('div');
+      msg.className = `chat-msg ${isAi ? 'ai' : 'user'}`;
+      
+      if (isAi) {
+        msg.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+        chatContent.appendChild(msg);
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        setTimeout(() => {
+          msg.innerHTML = text;
+          chatContent.scrollTop = chatContent.scrollHeight;
+        }, 1500);
+      } else {
+        msg.textContent = text;
+        chatContent.appendChild(msg);
+        chatContent.scrollTop = chatContent.scrollHeight;
+      }
+    }
+
+    sendBtn.onclick = () => {
+      const val = userInput.value.trim();
+      if (!val) return;
+
+      addMessage(val, false);
+      userInput.value = '';
+
+      // Mock AI Response
+      setTimeout(() => {
+        const responses = [
+          "Great question! To master Linked Lists, I recommend starting with the Floyd's Cycle Detection algorithm.",
+          "I can help with that. Should we start a mock interview on Bit Manipulation or Arrays?",
+          "Success in tech requires both coding and system design. Have you checked out our new System Design module?",
+          "That's a common interview topic. My advice is to focus on the edge cases first."
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        addMessage(randomResponse, true);
+      }, 500);
+    };
+
+    userInput.onkeypress = (e) => {
+      if (e.key === 'Enter') sendBtn.click();
+    };
+  </script>
+
+</body>
+</html>

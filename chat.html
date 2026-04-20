@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Mentor Chat | AI Mentor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <script src="data.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+    <div class="nav-links">
+      <a href="javascript:handleHomeNav()">Home</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="practice.html">Practice</a>
+      <a href="profile.html">Profile</a>
+      <a href="interview.html">Interview</a>
+    </div>
+    <div class="nav-right">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      <div id="profileTrigger" style="position: relative; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+        <span id="userNameNav" style="font-weight: 600; font-size: 0.95rem;">User</span>
+        <div class="profile-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+          <span id="userInitial">V</span>
+        </div>
+        <div id="profileDropdown" class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px; width: 160px; z-index: 1001;">
+          <button id="logoutBtn" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-family: inherit;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="chat-container">
+    <header class="chat-mentor-header">
+      <p id="userStatusTag">AI Mentor for Placement Assistant</p>
+      <h1>Intelligent AI Mentorship</h1>
+    </header>
+
+    <div class="chat-controls">
+      <div class="mood-selector">
+        <span class="mood-option" title="Stressed" onclick="setMood('stressed', this)">😓</span>
+        <span class="mood-option active" title="Neutral" onclick="setMood('neutral', this)">😐</span>
+        <span class="mood-option" title="Confident" onclick="setMood('confident', this)">😎</span>
+      </div>
+
+      <div class="quick-actions">
+        <span class="action-chip" onclick="quickMessage('Give me DSA roadmap')">Give me DSA roadmap</span>
+        <span class="action-chip" onclick="quickMessage('Ask me interview questions')">Ask me interview questions</span>
+        <span class="action-chip" onclick="quickMessage('What should I learn today?')">What should I learn today?</span>
+        <span class="action-chip" onclick="quickMessage('Resume tips')">Resume tips</span>
+      </div>
+    </div>
+
+    <section class="chat-window">
+      <div id="chatMessages" class="chat-messages">
+        <div class="message ai">
+          Hello! I'm your AI Mentor. Based on your profile, I'm ready to help you with your placement journey. How are you feeling today?
+        </div>
+      </div>
+      
+      <div id="typingIndicator" class="typing-indicator">AI is thinking...</div>
+
+      <div class="chat-input-area">
+        <button id="micBtn" class="mic-btn" title="Speak to AI"><i class="fas fa-microphone"></i></button>
+        <input type="text" id="userInput" placeholder="Ask anything about coding, roadmaps, or interviews...">
+        <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </section>
+
+    <!-- STOP VOICE BUTTON -->
+    <button id="stopVoiceBtn" class="stop-voice-btn">
+      <i class="fas fa-stop"></i> Stop Speaking
+    </button>
+  </main>
+
+  <script>
+    // AUTH & PERSONALIZATION
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) {
+      window.location.href = 'auth.html';
+    } else {
+      document.getElementById('userNameNav').innerText = user.name;
+      document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
+      document.getElementById('userStatusTag').innerText = `AI Mentor for ${user.year} ${user.course} ${user.branch} student`;
+    }
+
+    // CHAT LOGIC
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const micBtn = document.getElementById('micBtn');
+    const stopVoiceBtn = document.getElementById('stopVoiceBtn');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+    const API_URL = 'http://localhost:5000';
+
+    // SPEECH RECOGNITION SETUP
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('active');
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('active');
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+        handleSend();
+      };
+    }
+
+    micBtn.onclick = () => {
+      if (!recognition) return alert("Speech recognition not supported in this browser.");
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    };
+
+    // SPEECH SYNTHESIS
+    function speak(text) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onstart = () => stopVoiceBtn.style.display = 'block';
+      utterance.onend = () => stopVoiceBtn.style.display = 'none';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    stopVoiceBtn.onclick = () => {
+      window.speechSynthesis.cancel();
+      stopVoiceBtn.style.display = 'none';
+    };
+
+    function initChat() {
+      if (chatHistory.length === 0) {
+        // Initial personalized greeting from user request
+        const initialMsg = `Hi ${user.name}, I see you're a ${user.year} ${user.course} ${user.branch} student. Let's start your prep!`;
+        addMessage(initialMsg, true, false);
+      } else {
+        chatHistory.forEach(msg => {
+          renderMessage(msg.text, msg.isAi);
+        });
+      }
+    }
+
+    function renderMessage(text, isAi) {
+      const msg = document.createElement('div');
+      msg.className = `message ${isAi ? 'ai' : 'user'}`;
+      msg.innerText = text;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addMessage(text, isAi, save = true) {
+      renderMessage(text, isAi);
+      if (save) {
+        chatHistory.push({ text, isAi });
+        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+      }
+    }
+
+    function quickMessage(text) {
+      handleSend(text);
+    }
+
+    async function handleSend(text) {
+      if (window.location.protocol === 'file:') {
+        alert("CRITICAL: You are opening this file directly. Please access it via http://localhost:5000 for AI features to work.");
+        return;
+      }
+
+      const messageText = text || userInput.value.trim();
+      if (!messageText) return;
+
+      if (!text) userInput.value = '';
+      addMessage(messageText, false);
+
+      // SHOW TYPING
+      typingIndicator.style.display = 'block';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // CALL REAL AI BACKEND
+      try {
+        const response = await fetch(`${API_URL}/ai-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: messageText,
+            name: user.name,
+            year: user.year,
+            course: user.course,
+            branch: user.branch
+          })
+        });
+
+        const data = await response.json();
+        typingIndicator.style.display = 'none';
+
+        if (response.ok) {
+          addMessage(data.reply, true);
+          speak(data.reply); // AI Speaks response
+        } else {
+          const errMsg = data.details || data.error || "Unknown brain error";
+          addMessage(`Brain Error: ${errMsg}`, true);
+          console.error("Server Response Error:", data);
+        }
+      } catch (error) {
+        console.error("Chat API Connection Error:", error);
+        typingIndicator.style.display = 'none';
+        addMessage("Connection error. Make sure your server is running on Port 5000!", true);
+        alert("Backend not reachable. Did you start the server using 'node index.js'?");
+      }
+    }
+
+    initChat();
+
+    sendBtn.onclick = () => handleSend();
+    userInput.onkeypress = (e) => {
+      if (e.key === 'Enter') handleSend();
+    };
+
+    // LOGOUT & NAVBAR
+    const profileTrigger = document.getElementById('profileTrigger');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    profileTrigger.onclick = (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+    };
+    window.onclick = () => profileDropdown.classList.add('hidden');
+    logoutBtn.onclick = () => {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('chatHistory'); // Clear chat on logout for privacy
+      window.location.href = 'index.html';
+    };
+
+    // THEME TOGGLE Logic moved to data.js
+  </script>
+
+</body>
+</html>

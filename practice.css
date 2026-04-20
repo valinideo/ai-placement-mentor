@@ -1,0 +1,213 @@
+/* PRACTICE HUB SPECIFIC STYLES */
+
+.practice-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* PRACTICE HEADER */
+.practice-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.practice-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.practice-header p {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+/* PROBLEM GRID */
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.problem-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 2rem;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.problem-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.difficulty {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.difficulty.easy { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
+.difficulty.medium { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
+.difficulty.hard { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+.problem-topic {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.problem-card h3 {
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
+.problem-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.btn-leetcode {
+  background: #f89f1b; /* LeetCode orange */
+  color: #1a1a1a;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: var(--transition);
+}
+
+.btn-leetcode:hover {
+  background: #ffa116;
+  transform: scale(1.02);
+}
+
+.btn-details {
+  background: var(--glass);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-details:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .problem-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .practice-container {
+    padding: 1rem;
+  }
+}
+
+/* MODAL STYLES */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  border-radius: 28px;
+  padding: 2.5rem;
+  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.close-modal:hover {
+  color: #ef4444;
+}
+
+.modal-header {
+  margin-bottom: 2rem;
+}
+
+.modal-header h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-body h4 {
+  color: var(--primary);
+  margin: 1.5rem 0 0.5rem 0;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.modal-body p {
+  line-height: 1.6;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 12px;
+  white-space: pre-wrap;
+}
+

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile | AI Mentor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="profile.css">
+    <script src="data.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <h2 class="logo" onclick="window.location.href='index.html'">⚡ AI Mentor</h2>
+        <div class="nav-links">
+            <a href="javascript:handleHomeNav()">Home</a>
+            <a href="roadmap.html">Roadmap</a>
+            <a href="practice.html">Practice</a>
+            <a href="profile.html" class="active">Profile</a>
+            <a href="interview.html">Interview</a>
+        </div>
+        <div class="nav-right">
+            <button id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+            <div id="profileTrigger" style="position: relative; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                <span id="userNameNav" style="font-weight: 600; font-size: 0.95rem;">User</span>
+                <div class="profile-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    <span id="userInitial">V</span>
+                </div>
+                <div id="profileDropdown" class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px; width: 160px; z-index: 1001;">
+                    <button id="logoutBtn" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-family: inherit;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile-container">
+        
+        <!-- HEADER -->
+        <section class="profile-header-card">
+            <div class="profile-avatar-large" id="profileLargeInitial">V</div>
+            <div class="profile-info">
+                <h1 id="profileName">Valini Deo</h1>
+                <p id="profileEmail">valini@example.com</p>
+                <div class="status-badge" id="targetRoleBadge">
+                    <i class="fas fa-rocket"></i> Target: <span id="targetRoleText">SDE</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="profile-grid">
+            
+            <!-- PROGRESS OVERVIEW -->
+            <div class="grid-card span-8">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Progress Overview</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+                    <div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Solved</span>
+                            <span class="stat-value" id="solvedVal">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Attempted</span>
+                            <span class="stat-value" id="attemptedVal">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Topic Completion</span>
+                            <span class="stat-value" id="completionVal">0%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem;">Skills Analysis</h4>
+                        <div style="margin-bottom: 1.5rem;">
+                            <p style="font-size: 0.85rem; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                <span>Strong: <strong id="strongTopic">None yet</strong></span>
+                                <span style="color: var(--secondary);">85%</span>
+                            </p>
+                            <div style="height: 6px; background: var(--glass); border-radius: 3px;">
+                                <div style="width: 85%; height: 100%; background: var(--secondary); border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                <span>Weak Area: <strong id="weakTopic">Focus needed</strong></span>
+                                <span style="color: var(--primary);">40%</span>
+                            </p>
+                            <div style="height: 6px; background: var(--glass); border-radius: 3px;">
+                                <div style="width: 40%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STREAK SYSTEM -->
+            <div class="grid-card span-4">
+                <div class="card-title">
+                    <i class="fas fa-fire"></i>
+                    <h2>Learning Streak</h2>
+                </div>
+                <div style="text-align: center; padding: 1rem 0;">
+                    <span style="font-size: 4rem; font-weight: 800; display: block; filter: drop-shadow(0 0 10px var(--primary));" id="currentStreak">0</span>
+                    <p style="color: var(--muted); margin-bottom: 2rem;">Current Days Streak</p>
+                    
+                    <div style="display: flex; justify-content: space-around; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 16px;">
+                        <div>
+                            <span style="display: block; font-weight: 700;" id="longestStreak">0</span>
+                            <small style="color: var(--muted); font-size: 0.75rem;">Longest</small>
+                        </div>
+                        <div>
+                            <span style="display: block; font-weight: 700;" id="lastActive">Today</span>
+                            <small style="color: var(--muted); font-size: 0.75rem;">Last Active</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERVIEW STATS -->
+            <div class="grid-card span-6">
+                <div class="card-title">
+                    <i class="fas fa-microphone-alt"></i>
+                    <h2>Interview Performance</h2>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Sessions Taken</span>
+                    <span class="stat-value" id="interviewsVal">0</span>
+                </div>
+                <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                    <span class="stat-label">Recent Feedback Summary</span>
+                    <p style="font-size: 0.9rem; color: var(--muted);" id="interviewFeedback">
+                        "Your technical communication is getting better. Try to be more structured when answering behavioral questions."
+                    </p>
+                </div>
+            </div>
+
+            <!-- AI INSIGHTS -->
+            <div class="grid-card span-6">
+                <div class="card-title">
+                    <i class="fas fa-brain"></i>
+                    <h2>AI Insights & Suggestions</h2>
+                </div>
+                <div id="aiInsightsList">
+                    <div class="insight-item">
+                        <h4>Focus on Advanced Graphs</h4>
+                        <p>You've mastered BFS, but DFS and Dijsktra's are often asked in top-tier company rounds.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Consistency is Key</h4>
+                        <p>Maintaining a 5-day streak increases your placement probability by 40% based on our model.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+            <div class="grid-card span-12">
+                <div class="card-title">
+                    <i class="fas fa-trophy"></i>
+                    <h2>Achievements & Badges</h2>
+                </div>
+                <div class="badges-container" id="badgesContainer">
+                    <div class="badge locked">
+                        <i class="fas fa-seedling"></i>
+                        <span>First Step</span>
+                    </div>
+                    <div class="badge locked">
+                        <i class="fas fa-bolt"></i>
+                        <span>5-Day Streak</span>
+                    </div>
+                    <div class="badge locked">
+                        <i class="fas fa-star"></i>
+                        <span>Mock Master</span>
+                    </div>
+                    <div class="badge locked">
+                        <i class="fas fa-fire-alt"></i>
+                        <span>Fire Starter</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // AUTH & PERSONALIZATION
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if (!user) {
+            window.location.href = 'auth.html';
+        } else {
+            document.getElementById('userNameNav').innerText = user.name;
+            document.getElementById('profileName').innerText = user.name;
+            document.getElementById('profileEmail').innerText = user.email || 'user@example.com';
+            document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
+            document.getElementById('profileLargeInitial').innerText = user.name.charAt(0).toUpperCase();
+        }
+
+        // LOAD STATS
+        function loadProfileStats() {
+            const stats = getUserStats();
+            const progress = getProgress();
+
+            document.getElementById('solvedVal').innerText = stats.questionsSolved;
+            document.getElementById('attemptedVal').innerText = stats.questionsAttempted;
+            document.getElementById('interviewsVal').innerText = stats.interviewsTaken;
+            document.getElementById('currentStreak').innerText = stats.streak.current;
+            document.getElementById('longestStreak').innerText = stats.streak.longest || 0;
+            document.getElementById('lastActive').innerText = stats.streak.lastActiveDate || 'N/A';
+            document.getElementById('targetRoleText').innerText = stats.targetRole;
+
+            // Completion %
+            const totalQuestionsPossible = 40; // Approx based on TRACKS_DATA
+            const completion = Math.round((stats.questionsSolved / totalQuestionsPossible) * 100);
+            document.getElementById('completionVal').innerText = completion + '%';
+
+            // Strong/Weak Topics
+            if (stats.strongTopics.length > 0) document.getElementById('strongTopic').innerText = stats.strongTopics[0];
+            if (stats.weakTopics.length > 0) document.getElementById('weakTopic').innerText = stats.weakTopics[0];
+
+            // Render Badges
+            renderBadges(stats.badges);
+        }
+
+        function renderBadges(earnedBadges) {
+            const container = document.getElementById('badgesContainer');
+            const possibleBadges = [
+                { id: "First Step", icon: "fa-seedling", label: "First Step" },
+                { id: "Consistent Learner", icon: "fa-bolt", label: "5-Day Streak" },
+                { id: "Mock Master", icon: "fa-star", label: "Mock Master" },
+                { id: "Fire Starter", icon: "fa-fire-alt", label: "Fire Starter" }
+            ];
+
+            container.innerHTML = possibleBadges.map(b => {
+                const isEarned = earnedBadges.includes(b.id);
+                return `
+                    <div class="badge ${isEarned ? 'earned' : 'locked'}">
+                        <i class="fas ${b.icon}"></i>
+                        <span>${b.label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // NAVBAR & LOGOUT
+        const profileTrigger = document.getElementById('profileTrigger');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        profileTrigger.onclick = (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        };
+        window.onclick = () => profileDropdown.classList.add('hidden');
+        logoutBtn.onclick = () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        };
+
+        // Initialize
+        loadProfileStats();
+    </script>
+</body>
+</html>
